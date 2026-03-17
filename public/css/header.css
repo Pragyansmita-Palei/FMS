@@ -1,0 +1,225 @@
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  width: calc(100% - 250px);
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  z-index: 900;
+}
+
+/* Sidebar OPEN */
+body.sidebar-expanded .app-header {
+  left: 250px;
+  width: calc(100% - 250px);
+}
+
+/* Sidebar ICON ONLY */
+body.sidebar-collapsed .app-header {
+  left: 70px;
+  width: calc(100% - 70px);
+}
+.header-container {
+  height: 100%;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Search */
+
+.search-box {
+  max-width: 420px;
+  width: 100%;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px 0 44px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #9ca3af;
+}
+
+/* Actions */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Notification */
+
+.notify-btn {
+  position: relative;
+  padding: 8px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.notify-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: #ef4444;
+  color: #ffffff;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Profile */
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.role {
+  font-size: 12px;
+  color: #6b7280;
+}
+/* mobile toggle */
+.mobile-toggle{
+  display:none;
+  background:none;
+  border:none;
+  font-size:22px;
+  cursor:pointer;
+  color:#2563eb;
+}
+
+.profile-dropdown {
+    width: 260px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    z-index: 9999;
+}
+
+/* BLUE HEADER */
+.profile-header {
+    background: #348cc7;
+    padding: 20px 10px;
+}
+
+/* CIRCLE AVATAR */
+.profile-avatar {
+    width: 70px;
+    height: 70px;
+    background: #ffffff;
+    color: #0d6efd;
+    font-weight: bold;
+    font-size: 22px;
+    border-radius: 50%;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* BUTTON AREA */
+.profile-body {
+    padding: 12px;
+}
+
+
+.profile-btn {
+    background: transparent !important;
+    border: none !important;
+    padding: 0;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove focus ring */
+.profile-btn:focus,
+.profile-btn:active,
+.profile-btn:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+
+@media(max-width:768px){
+
+
+  .mobile-toggle{
+    display:block;
+  }
+
+  .sidebar{
+    left:-260px;
+  }
+
+  body.sidebar-open .sidebar{
+    left:0;
+  }
+
+  .app-header{
+    left:0 !important;
+    width:100% !important;
+        z-index: 1100;
+
+  }
+
+  .sidebar .toggle-btn{
+    display:none;
+  }
+
+}
+
+
+
+
+

@@ -1,0 +1,143 @@
+/* ================= Modern Form Styles ================= */
+:root {
+    --primary-dark: #1d5d41;
+    --primary-light: #238254;
+    --card-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+/* Card */
+.card {
+    transition: none;
+    box-shadow: var(--card-shadow);
+}
+
+/* Form controls */
+.form-control, .form-select {
+    border: 1px solid #e2e8f0;
+    transition: none;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-dark);
+    box-shadow: none;
+    outline: none;
+}
+
+/* Validation styles */
+.is-invalid {
+    border-color: #dc3545 !important;
+    background-image: none !important;
+}
+
+.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.validation-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+    display: none;
+    padding-left: 0.5rem;
+}
+
+/* Toast styling */
+.toast {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    min-width: 320px;
+}
+
+.toast.bg-success {
+    background: linear-gradient(135deg, #238254 0%, #1d5d41 100%) !important;
+}
+
+.toast.bg-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+.toast.bg-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: white !important;
+}
+
+.toast-body {
+    padding: 1rem;
+}
+
+/* Modal animations */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+/* Progress bar animation */
+.progress-bar {
+    transition: none;
+}
+
+/* Buttons */
+.btn {
+    transition: none;
+}
+
+/* Customer info card */
+.customer-info-card {
+    transition: none;
+}
+
+.sales-associate-select + .select2-container .select2-selection--single {
+    height: 50px!important;
+    padding-top: 8px!important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 1rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .d-flex.justify-content-end {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Animated placeholder */
+.form-control::placeholder {
+    color: #a0aec0;
+    font-size: 0.95rem;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

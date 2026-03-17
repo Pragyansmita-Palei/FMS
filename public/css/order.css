@@ -1,0 +1,62 @@
+/* ===============================
+   FORM + MODAL DATA COLOR THEME
+   =============================== */
+
+:root{
+    --form-data-color:#6c757d;
+}
+
+/* labels */
+#step1Form label,
+#customerModal label{
+    color: var(--form-data-color);
+    font-weight: 500;
+}
+
+/* inputs / selects / textarea text */
+#step1Form .form-control,
+#customerModal .form-control{
+    color: var(--form-data-color);
+}
+
+/* placeholder color */
+#step1Form .form-control::placeholder,
+#customerModal .form-control::placeholder{
+    color: #6c757d;
+    opacity: .6;
+}
+
+/* readonly fields */
+#step1Form .form-control[readonly]{
+    background-color:#f8f9fa;
+    color: var(--form-data-color);
+}
+
+/* card titles */
+#step1Form h4.details{
+    color: var(--form-data-color);
+}
+
+/* modal title */
+#customerModal .modal-header h5{
+    color: var(--form-data-color);
+}
+
+/* customer info card text */
+.customer-info-card,
+.customer-info-card h6,
+.customer-info-card .small{
+    color: var(--form-data-color);
+}
+
+/* edit link */
+.edit-link{
+    color: var(--form-data-color);
+}
+
+/* focus border (do not break invalid state) */
+#step1Form .form-control:focus:not(.is-invalid),
+#customerModal .form-control:focus:not(.is-invalid){
+    border-color: #6c757d;
+    box-shadow: 0 0 0 .2rem rgba(108,117,125,.25);
+}

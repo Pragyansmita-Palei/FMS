@@ -1,0 +1,98 @@
+.material-card {
+    border-radius: 10px;
+    border: 1px solid #e6e9ee;
+}
+.material-header {
+    border-bottom: 1px solid #eef1f5;
+}
+.material-row {
+    border-bottom: 1px solid #f1f3f6;
+}
+.material-row:last-child {
+    border-bottom: none;
+}
+/* .form-select-sm,
+.form-control-sm {
+    border-radius: 17px;
+    font-size: 13px;
+} */
+.btn-outline-primary {
+    border-radius: 8px;
+    font-size: 13px;
+    padding: 4px 12px;
+}
+.area-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+.area-subtitle {
+    font-size: 12px;
+    color: #6c757d;
+}
+.icon-btn {
+    cursor: pointer;
+    font-size: 16px;
+}
+.area-filter .list-group-item {
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+.area-filter .list-group-item.active {
+    background: #e9f2ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+/* LEFT PANEL CARD */
+.area-filter {
+    padding: 12px 8px;
+}
+
+/* TITLE */
+.area-filter h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    padding: 12px 14px 6px;
+    margin: 0;
+}
+
+/* DIVIDER */
+.area-filter hr {
+    margin: 6px 14px 10px;
+    border-color: #e5e7eb;
+}
+
+/* LIST ITEM */
+.area-filter .list-group-item {
+    border: none;
+    margin: 4px 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #334155;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    transition: background 0.2s ease;
+}
+
+/* HOVER */
+.area-filter .list-group-item:hover {
+    background: #f1f5f9;
+}
+
+/* ACTIVE */
+.area-filter .list-group-item.active {
+    background: #e8f1ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* CHECK ICON */
+.area-filter .list-group-item.active::after {
+    content: "✔";
+    font-size: 14px;
+    color: #2563eb;
+}

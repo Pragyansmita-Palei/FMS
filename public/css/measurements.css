@@ -1,0 +1,103 @@
+.is-invalid {
+    border: 1px solid #dc3545 !important;
+}
+
+#areaDropdownList{
+    border:1px solid #ddd;
+    border-radius:6px;
+    background:#fff;
+}
+
+.removeArea{
+    background:none;
+    border:none;
+    font-size:16px;
+}
+
+table .unit,
+table .length,
+table .breadth,
+table .width,
+table .height,
+table .qty{
+    width: 90px;
+}
+/* All data text color */
+#areaList .list-group-item,
+#areaDropdownList .list-group-item,
+#areaTables table td,
+#areaInput,
+#areaTables input.form-control
+{
+    color: #6c757d;
+}
+/* Select box value */
+#areaTables select.form-control,
+#areaTables select.unit {
+    color: #6c757d;
+}
+
+/* Dropdown options */
+#areaTables select.form-control option,
+#areaTables select.unit option {
+    color: #6c757d;
+}
+
+#measurementMainCard{
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background: #fff;
+    overflow: visible;
+}
+
+/* remove inner card shadows */
+#measurementMainCard .card{
+    border:none;
+}
+
+/* keep footer white */
+#measurementMainCard .card-footer{
+    border-top:1px solid #dee2e6;
+}
+#areaTables{
+     /* border:1px solid #dcdfe6; */
+    border-radius:8px;
+    /* background:#ffffff; */
+}
+/* Make remark input wider */
+table .remark {
+    width: 250px; /* Adjust as needed */
+}
+.empty-state-box{
+    background:#f8f9fa;
+    border:1px solid #dcdfe6;
+    border-radius:10px;
+    padding:22px;
+    text-align:center;
+    color:#6c757d;
+    font-weight:500;
+}
+
+#areaTables{
+    min-height: 120px; /* prevents collapsing */
+}
+
+.area-filter{
+    border-radius:20px;
+    padding:4px 14px;
+}
+
+.area-filter.active{
+    background:#238254;
+    color:#fff;
+    border-color:#238254;
+}
+
+#areaList{
+    max-width:100%;
+    overflow-x:auto;
+}
+
+#areaList::-webkit-scrollbar{
+    height:4px;
+}
