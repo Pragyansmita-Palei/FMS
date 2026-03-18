@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Exports\CustomersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -47,23 +51,43 @@ class CustomerController extends Controller
         return view('customers.create', compact('customerCode'));
     }
 
+
+
 public function store(Request $request)
 {
     $last = Customer::latest('id')->first();
     $nextId = $last ? $last->id + 1 : 1;
 
-    $request->validate([
+    $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'phone' => 'required|digits_between:10,15',
-        'alternate_phone' => 'nullable|digits_between:10,15',
-        'email' => 'required|email',
+        'email' => 'required|email|unique:users,email', // ✅ check users table
         'address_line1' => 'required|string|max:255',
         'city' => 'required|string|max:100',
         'state' => 'required|string|max:100',
         'pin' => 'required|digits:6',
     ]);
 
+   if ($validator->fails()) {
+    return redirect()
+    ->route('customers.index')
+    ->withErrors($validator)
+    ->withInput();
+}
+
+    // ✅ STEP 1: Create User
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make('12345678'), // default password
+    ]);
+
+    // ✅ STEP 2: Assign Role (Spatie or manual)
+    $user->assignRole('customer'); // if using spatie
+
+    // ✅ STEP 3: Create Customer
     Customer::create([
+        'user_id'         => $user->id, // 🔥 link
         'customer_code'   => 'FMS-C-' . $nextId,
         'name'            => $request->name,
         'phone'           => $request->phone,
@@ -77,14 +101,10 @@ public function store(Request $request)
         'landmark'        => $request->landmark,
     ]);
 
-    // ✅ Instead of redirecting, return the same index view
-    $customers = Customer::withCount('projects')->latest()->paginate(10);
-    $customerCode = 'FMS-C-' . ($nextId + 1);
-
-    return view('customers.index', compact('customers', 'customerCode'))
-           ->with('success', 'Customer added successfully!');
+    return redirect()
+        ->route('customers.index')
+        ->with('success', 'Customer + User created successfully!');
 }
-
 
     /* ===================== EDIT ===================== */
     public function edit(Customer $customer)

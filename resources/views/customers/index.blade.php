@@ -413,12 +413,11 @@
 @endsection
 
 @push('scripts')
-@if ($errors->any())
+@if($errors->any())
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var addCustomerModalEl = document.getElementById('addCustomerModal');
-    var addCustomerModal = bootstrap.Modal.getOrCreateInstance(addCustomerModalEl);
-    addCustomerModal.show();
+document.addEventListener("DOMContentLoaded", function () {
+    var modal = new bootstrap.Modal(document.getElementById('addCustomerModal'));
+    modal.show();
 });
 </script>
 @endif

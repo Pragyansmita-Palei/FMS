@@ -44,4 +44,8 @@ public function projects()
 {
     return $this->belongsToMany(Project::class);
 }
+public function customer()
+{
+    return $this->hasOne(Customer::class);
+}
 }
