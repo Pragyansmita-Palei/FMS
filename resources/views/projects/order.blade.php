@@ -57,12 +57,13 @@
     @endif">
     {{ ucfirst($project->status ?? 'Unknown') }}
 </td>
-                <td> @if($project->status === 'confirmed')
-        <a href="{{ route('projects.received-payments', $project->id) }}"
-           class="text-warning"
-           title="Receive Payment">
-payment        </a>
-    @endif</td>
+                <td> @if(!in_array($project->status, ['pending', 'cancelled']))
+    <a href="{{ route('projects.received-payments', $project->id) }}"
+       class="text-warning"
+       title="Receive Payment">
+        payment
+    </a>
+@endif</td>
 
 <td class="text-end pe-3">
 
