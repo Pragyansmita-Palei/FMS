@@ -400,26 +400,39 @@
                                                         <input type="text" name="name" value="{{ old('name') }}"
                                                             class="form-control" required>
                                                     </div>
+<div class="col-md-6">
+    <label class="form-label">Phone <span class="text-danger">*</span></label>
+    <input type="text"
+           name="phone"
+           value="{{ old('phone') }}"
+           class="form-control @error('phone') is-invalid @enderror"
+           required>
+    @error('phone')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+</div>
 
                                                     <div class="col-md-6">
-                                                        <label class="form-label">Phone <span
-                                                                class="text-danger">*</span></label>
-                                                        <input type="text" name="phone" value="{{ old('phone') }}"
-                                                            class="form-control" required>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Alternate Phone</label>
-                                                        <input type="text" name="alternate_phone"
-                                                            value="{{ old('alternate_phone') }}" class="form-control">
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Email <span
-                                                                class="text-danger">*</span></label>
-                                                        <input type="email" name="email" value="{{ old('email') }}"
-                                                            class="form-control" required>
-                                                    </div>
+    <label class="form-label">Alternate Phone</label>
+    <input type="text"
+           name="alternate_phone"
+           value="{{ old('alternate_phone') }}"
+           class="form-control @error('alternate_phone') is-invalid @enderror">
+    @error('alternate_phone')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+</div>
+<div class="col-md-6">
+    <label class="form-label">Email <span class="text-danger">*</span></label>
+    <input type="email"
+           name="email"
+           value="{{ old('email') }}"
+           class="form-control @error('email') is-invalid @enderror"
+           required>
+    @error('email')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
+</div>
 
                                                     <div class="col-md-6">
                                                         <label class="form-label">Password <span
@@ -504,4 +517,15 @@
 
     </div>
 
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modalEl = document.getElementById('addSalesAssociateModal');
+            if (modalEl) {
+                const addModal = new bootstrap.Modal(modalEl);
+                addModal.show();
+            }
+        });
+    </script>
+@endif
 @endsection

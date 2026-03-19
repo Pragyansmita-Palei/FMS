@@ -3,91 +3,130 @@
 namespace App\Http\Controllers;
 
 use App\Models\Interior;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class InteriorController extends Controller
 {
-
-public function index(Request $request)
-{
-    $query = Interior::query();
-
-    if ($request->search) {
-        $query->where('firm_name', 'like', '%' . $request->search . '%')
-              ->orWhere('email', 'like', '%' . $request->search . '%')
-              ->orWhere('phone', 'like', '%' . $request->search . '%');
-    }
-
-    $interiors = $query->latest()->paginate(10);
-
-    return view('interiors.index', compact('interiors'));
-}
-    // CREATE FORM
-    public function create()
+    // ================= LIST =================
+    public function index(Request $request)
     {
-        return view('interiors.create');
+        $query = Interior::with('user');
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('email', 'like', '%' . $request->search . '%')
+                  ->orWhere('phone', 'like', '%' . $request->search . '%')
+                  ->orWhereHas('user', function ($uq) use ($request) {
+                      $uq->where('name', 'like', '%' . $request->search . '%')
+                         ->orWhere('email', 'like', '%' . $request->search . '%')
+                         ->orWhere('phone', 'like', '%' . $request->search . '%');
+                  });
+            });
+        }
+
+        $interiors = $query->latest()->paginate(10);
+
+        return view('interiors.index', compact('interiors'));
     }
 
-    // STORE DATA
- public function store(Request $request)
-{
-    $validated = $request->validate([
-        'firm_name' => 'required|string|max:255',
-        'email'     => 'nullable|email|max:255',
-        'phone'     => 'nullable|string|max:15',
-        'address'   => 'nullable|string',
-    ]);
-
-    Interior::create($validated);
-
-    return redirect()->route('interiors.index');
-}
-
-    // EDIT FORM
-    public function edit($id)
+    // ================= STORE =================
+    public function store(Request $request)
     {
-        $interior = Interior::findOrFail($id);
-        return view('interiors.edit', compact('interior'));
+        $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email|unique:interiors,email',
+            'phone' => 'nullable|digits_between:10,15|unique:users,phone|unique:interiors,phone',
+            'address' => 'nullable|string',
+        ], [
+            'email.unique' => 'This email already exists.',
+            'phone.unique' => 'This phone already exists.',
+        ]);
+
+        DB::transaction(function () use ($request) {
+
+            $user = User::create([
+                'name'     => $request->name,
+                'email'    => $request->email ?: null,
+                'phone'    => $request->phone ?: null,
+                'password' => Hash::make('12345678'),
+            ]);
+
+            if (class_exists(\Spatie\Permission\Models\Role::class)) {
+                if (\Spatie\Permission\Models\Role::where('name', 'interior')->exists()) {
+                    $user->assignRole('interior');
+                }
+            }
+
+            $user->interior()->create([
+                'name'    => $request->name,
+                'email'   => $request->email ?: null,
+                'phone'   => $request->phone ?: null,
+                'address' => $request->address,
+            ]);
+        });
+
+        return redirect()->route('interiors.index')
+                         ->with('success', 'Interior added successfully.');
     }
 
-    // UPDATE DATA
+    // ================= UPDATE =================
     public function update(Request $request, $id)
     {
         $interior = Interior::findOrFail($id);
 
         $request->validate([
-            'firm_name' => 'required|string|max:255',
-            'email'     => 'nullable|email|max:255',
-            'phone'     => 'nullable|digits_between:8,15',
-            'address'   => 'nullable|string',
+            'name'  => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email,' . $interior->user_id .
+                       '|unique:interiors,email,' . $interior->id,
+            'phone' => 'nullable|digits_between:10,15|unique:users,phone,' . $interior->user_id .
+                       '|unique:interiors,phone,' . $interior->id,
+            'address' => 'nullable|string',
+        ], [
+            'email.unique' => 'This email already exists.',
+            'phone.unique' => 'This phone already exists.',
         ]);
 
-        $interior->update($request->all());
+        DB::transaction(function () use ($request, $interior) {
 
-        return redirect()
-            ->route('interiors.index', $id);
+            if ($interior->user) {
+                $interior->user->update([
+                    'name'  => $request->name,
+                    'email' => $request->email ?: null,
+                    'phone' => $request->phone ?: null,
+                ]);
+            }
+
+            $interior->update([
+                'name'    => $request->name,
+                'email'   => $request->email ?: null,
+                'phone'   => $request->phone ?: null,
+                'address' => $request->address,
+            ]);
+        });
+
+        return redirect()->route('interiors.index')
+                         ->with('success', 'Interior updated successfully.');
     }
 
+    // ================= DELETE =================
     public function destroy($id)
-{
-    $interior = Interior::findOrFail($id);
-    $interior->delete();
+    {
+        $interior = Interior::findOrFail($id);
 
-    return redirect()->route('interiors.index')
-                     ->with('success', 'Interior deleted successfully.');
-}
+        DB::transaction(function () use ($interior) {
 
-public function assignInterior(Request $request, Project $project)
-{
-    $request->validate([
-        'interior_id' => 'required|exists:interiors,id'
-    ]);
+            if ($interior->user) {
+                $interior->user->delete();
+            }
 
-    $project->interior_id = $request->interior_id;
-    $project->save();
+            $interior->delete();
+        });
 
-    return response()->json(['success' => true]);
-}
-
-
+        return redirect()->route('interiors.index')
+                         ->with('success', 'Interior deleted successfully.');
+    }
 }

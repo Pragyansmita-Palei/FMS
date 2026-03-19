@@ -130,25 +130,6 @@
                     </a>
                 </li> -->
 
- <li class="has-submenu {{ request()->routeIs('projects.*') || request()->routeIs('orders.*') ? 'open' : '' }}">
-    <div class="menu-row">
-        <i class="fa fa-box"></i>
-        <span class="menu-text">Order</span>
-    </div>
-
-    <ul class="submenu wide-submenu">
-
-         <li>
-            <a href="{{ route('projects.index') }}">Projects</a>
-        </li>
-     <li>
-    <a href="{{ route('orders.index') }}">Orders</a>
-   </li>
-
-
-
-    </ul>
-</li>
 
 
                 {{-- MASTER --}}
@@ -171,6 +152,26 @@
                 </li>
             @endif
 
+
+ <li class="has-submenu {{ request()->routeIs('projects.*') || request()->routeIs('orders.*') ? 'open' : '' }}">
+    <div class="menu-row">
+        <i class="fa fa-box"></i>
+        <span class="menu-text">Order</span>
+    </div>
+
+    <ul class="submenu wide-submenu">
+
+         <li>
+            <a href="{{ route('projects.index') }}">Projects</a>
+        </li>
+     <li>
+    <a href="{{ route('orders.index') }}">Orders</a>
+   </li>
+
+
+
+    </ul>
+</li>
             @if(auth()->user()->hasRole(['admin','sales_associates','tailors']))
                 <li>
                     <a href="{{ route('tasks.index') }}">

@@ -14,6 +14,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'alternate_phone',
         'password',
     ];
 
@@ -48,4 +50,15 @@ public function customer()
 {
     return $this->hasOne(Customer::class);
 }
+
+public function interior()
+{
+    return $this->hasOne(Interior::class);
+}
+
+public function labour()
+{
+    return $this->hasOne(Labour::class);
+}
+
 }

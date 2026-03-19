@@ -86,8 +86,8 @@
         {{ $labours->firstItem() + $key }}
     </td>
 
-    <td class="fw-semibold">{{ $labour->labour_name }}</td>
-    <td>{{ $labour->phone_number }}</td>
+    <td class="fw-semibold">{{ $labour->name }}</td>
+    <td>{{ $labour->phone }}</td>
     <td>{{ $labour->address ?? '-' }}</td>
     <td>{{ $labour->rate_type ?? '-' }}</td>
     <td>{{ $labour->price ?? '-' }}</td>
@@ -118,7 +118,8 @@
             @method('DELETE')
 
             <button type="button"
-                    class="btn p-0 border-0 bg-transparent text-secondary btn-delete">
+                    class="btn p-0 border-0 bg-transparent text-secondary btn-delete"
+                    data-message="This labour will be deleted!">
                 <i class="bi bi-trash"></i>
             </button>
         </form>
@@ -150,27 +151,35 @@
 <div class="col-md-6">
     <label class="form-label">Labour Name <span class="text-danger">*</span></label>
     <input type="text"
-           name="labour_name"
-           class="form-control"
-           value="{{ $labour->labour_name }}"
+           name="name"
+           class="form-control @error('name') is-invalid @enderror"
+           value="{{ old('name', $labour->name) }}"
            required>
+    @error('name')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
-    <label class="form-label">Phone <span class="text-danger">*</span></label>
+    <label class="form-label">Phone</label>
     <input type="text"
-           name="phone_number"
-           class="form-control"
-           value="{{ $labour->phone_number }}"
-           required>
+           name="phone"
+           class="form-control @error('phone') is-invalid @enderror"
+           value="{{ old('phone', $labour->phone) }}">
+    @error('phone')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Email</label>
     <input type="email"
            name="email"
-           class="form-control"
-           value="{{ $labour->email }}">
+           class="form-control @error('email') is-invalid @enderror"
+           value="{{ old('email', $labour->email) }}">
+    @error('email')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
@@ -224,7 +233,7 @@
 
 <div class="modal-header">
     <h5 class="modal-title">
-        Labour Details – {{ $labour->labour_name }}
+        Labour Details – {{ $labour->name }}
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
@@ -234,12 +243,12 @@
 
 <div class="col-md-6">
     <label class="form-label">Labour Name</label>
-    <input class="form-control" value="{{ $labour->labour_name }}" readonly>
+    <input class="form-control" value="{{ $labour->name }}" readonly>
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Phone</label>
-    <input class="form-control" value="{{ $labour->phone_number }}" readonly>
+    <input class="form-control" value="{{ $labour->phone }}" readonly>
 </div>
 
 <div class="col-md-6">
@@ -315,38 +324,73 @@
 
 <div class="col-md-6">
     <label class="form-label">Labour Name <span class="text-danger">*</span></label>
-    <input type="text" name="labour_name" class="form-control" required>
+    <input type="text"
+           name="name"
+           class="form-control @error('name') is-invalid @enderror"
+           value="{{ old('name') }}"
+           required>
+    @error('name')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
-    <label class="form-label">Phone <span class="text-danger">*</span></label>
-    <input type="text" name="phone_number" class="form-control" required>
+    <label class="form-label">Phone</label>
+    <input type="text"
+           name="phone"
+           class="form-control @error('phone') is-invalid @enderror"
+           value="{{ old('phone') }}">
+    @error('phone')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Email</label>
-    <input type="email" name="email" class="form-control">
+    <input type="email"
+           name="email"
+           class="form-control @error('email') is-invalid @enderror"
+           value="{{ old('email') }}">
+    @error('email')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Rate Type <span class="text-danger">*</span></label>
-    <select name="rate_type" class="form-select" required>
+    <select name="rate_type" class="form-select @error('rate_type') is-invalid @enderror" required>
         <option value="">Select</option>
-        <option value="day">Day</option>
-        <option value="hour">Hour</option>
+        <option value="day" {{ old('rate_type') == 'day' ? 'selected' : '' }}>Day</option>
+        <option value="hour" {{ old('rate_type') == 'hour' ? 'selected' : '' }}>Hour</option>
     </select>
+    @error('rate_type')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Price / Piece <span class="text-danger">*</span></label>
-    <input type="number" step="0.01" name="price" class="form-control" required>
+    <input type="number"
+           step="0.01"
+           name="price"
+           class="form-control @error('price') is-invalid @enderror"
+           value="{{ old('price') }}"
+           required>
+    @error('price')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Address <span class="text-danger">*</span></label>
-    <textarea name="address" class="form-control" rows="2" required></textarea>
+    <textarea name="address"
+              class="form-control @error('address') is-invalid @enderror"
+              rows="2"
+              required>{{ old('address') }}</textarea>
+    @error('address')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
 </div>
-
 </div>
 </div>
 
@@ -362,4 +406,16 @@
 </div>
 {{-- ===================== END ADD MODAL ===================== --}}
 
+
+@if ($errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var addModalEl = document.getElementById('addLabourModal');
+        if (addModalEl) {
+            var addModal = new bootstrap.Modal(addModalEl);
+            addModal.show();
+        }
+    });
+</script>
+@endif
 @endsection

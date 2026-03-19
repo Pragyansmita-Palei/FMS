@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
 
+use App\Models\User;
 use App\Models\Tailor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,139 +15,88 @@ use App\Exports\TailorsSampleExport;
 
 class TailorController extends Controller
 {
-   public function index()
-{
-    $tailors = Tailor::with('user')->latest()->paginate(10);
+    public function index()
+    {
+        $tailors = Tailor::with('user')->latest()->paginate(10);
 
-    $lastTailor = Tailor::latest()->first();
-    $lastTailorId = $lastTailor
-        ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id))
-        : 0;
+        $lastTailor = Tailor::latest()->first();
+        $lastTailorId = $lastTailor
+            ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id))
+            : 0;
 
-    return view('tailors.index', compact('tailors','lastTailorId'));
-}
+        return view('tailors.index', compact('tailors', 'lastTailorId'));
+    }
+
     public function create()
     {
-        // Get last tailor ID for auto-generation
         $lastTailor = Tailor::latest()->first();
-        $lastTailorId = $lastTailor ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id)) : 0;
+        $lastTailorId = $lastTailor
+            ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id))
+            : 0;
 
         return view('tailors.create', compact('lastTailorId'));
     }
-public function store(Request $request)
-{
-    $request->validate([
-        'name'     => 'required|string|max:255',
-        'email'    => 'required|email|unique:users,email',
-        'password' => 'required|min:6',
 
-        'phone' => 'required|digits_between:10,15|unique:tailors,phone',
-        'alternate_phone' => 'nullable|digits_between:10,15',
-        'address_line1' => 'required|string|max:255',
-        'address_line2' => 'nullable|string|max:255',
-        'city' => 'required|string|max:100',
-        'state' => 'required|string|max:100',
-        'pin' => 'required|digits:6',
-        'landmark' => 'nullable|string|max:255',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|min:6',
 
-    DB::transaction(function () use ($request) {
+            'phone' => 'required|digits_between:10,15|unique:users,phone|unique:tailors,phone',
+            'alternate_phone' => 'nullable|digits_between:10,15|different:phone|unique:users,alternate_phone|unique:tailors,alternate_phone',
 
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'address_line1' => 'required|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'pin' => 'required|digits:6',
+            'landmark' => 'nullable|string|max:255',
+        ], [
+            'email.unique' => 'This email already exists.',
+            'phone.unique' => 'This phone already exists.',
+            'alternate_phone.unique' => 'This alternate phone already exists.',
+            'alternate_phone.different' => 'Alternate phone must be different from phone.',
         ]);
 
-        $user->assignRole('tailors');
+        DB::transaction(function () use ($request) {
+            $user = User::create([
+                'name'            => $request->name,
+                'email'           => $request->email,
+                'password'        => Hash::make($request->password),
+                'phone'           => $request->phone,
+                'alternate_phone' => $request->alternate_phone,
+            ]);
 
-        $lastTailor = Tailor::latest()->first();
+            $user->assignRole('tailors');
 
-        $tailorId = 'FMS-T-' . (
-            $lastTailor
-                ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id)) + 1
-                : 1
-        );
+            $lastTailor = Tailor::latest()->first();
 
-        Tailor::create([
-            'user_id'         => $user->id,
-            'tailor_id'       => $tailorId,
-            'phone'           => $request->phone,
-            'alternate_phone' => $request->alternate_phone,   // ✅ FIXED
-            'address_line1'   => $request->address_line1,
-            'address_line2'   => $request->address_line2,
-            'city'            => $request->city,
-            'state'           => $request->state,
-            'pin'             => $request->pin,
-            'landmark'        => $request->landmark,
-        ]);
-    });
+            $tailorId = 'FMS-T-' . (
+                $lastTailor
+                    ? intval(str_replace('FMS-T-', '', $lastTailor->tailor_id)) + 1
+                    : 1
+            );
 
-    return redirect()->route('tailors.index')
-        ->with('success', 'Tailor added successfully.');
-}
+            Tailor::create([
+                'user_id'         => $user->id,
+                'tailor_id'       => $tailorId,
+                'phone'           => $request->phone,
+                'alternate_phone' => $request->alternate_phone,
+                'address_line1'   => $request->address_line1,
+                'address_line2'   => $request->address_line2,
+                'city'            => $request->city,
+                'state'           => $request->state,
+                'pin'             => $request->pin,
+                'landmark'        => $request->landmark,
+            ]);
+        });
 
-
-
-public function update(Request $request, Tailor $tailor)
-{
-    $request->validate([
-        // user table
-        'name' => 'required|string|max:255',
-        'email' => 'nullable|email|unique:users,email,' . $tailor->user_id,
-
-        // tailor table
-        'phone' => 'required|string|max:20|unique:tailors,phone,' . $tailor->id,
-        'alternate_phone' => 'nullable|string|max:20',
-        'address_line1' => 'required|string|max:255',
-        'address_line2' => 'nullable|string|max:255',
-        'city' => 'required|string|max:100',
-        'state' => 'required|string|max:100',
-        'pin' => 'required|string|max:10',
-        'landmark' => 'nullable|string|max:255',
-
-        // password
-        'password' => 'nullable|min:6',
-    ]);
-
-    /*
-     |--------------------------------------
-     | Update USER table
-     |--------------------------------------
-     */
-    $user = $tailor->user;
-
-    $user->name  = $request->name;
-    $user->email = $request->email;
-
-    if ($request->filled('password')) {
-        $user->password = Hash::make($request->password);
+        return redirect()
+            ->route('tailors.index')
+            ->with('success', 'Tailor added successfully.');
     }
-
-    $user->save();
-
-    /*
-     |--------------------------------------
-     | Update TAILOR table
-     |--------------------------------------
-     */
-    $tailor->update([
-        'phone'            => $request->phone,
-        'alternate_phone'  => $request->alternate_phone,
-        'address_line1'    => $request->address_line1,
-        'address_line2'    => $request->address_line2,
-        'city'             => $request->city,
-        'state'            => $request->state,
-        'pin'              => $request->pin,
-        'landmark'         => $request->landmark,
-    ]);
-
-    return redirect()
-        ->route('tailors.index')
-        ->with('success', 'Tailor updated successfully.');
-}
-
-
 
     public function show(Tailor $tailor)
     {
@@ -159,6 +108,59 @@ public function update(Request $request, Tailor $tailor)
         return view('tailors.edit', compact('tailor'));
     }
 
+    public function update(Request $request, Tailor $tailor)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $tailor->user_id,
+
+            'phone' => 'required|digits_between:10,15|unique:users,phone,' . $tailor->user_id . '|unique:tailors,phone,' . $tailor->id,
+            'alternate_phone' => 'nullable|digits_between:10,15|different:phone|unique:users,alternate_phone,' . $tailor->user_id . '|unique:tailors,alternate_phone,' . $tailor->id,
+
+            'address_line1' => 'required|string|max:255',
+            'address_line2' => 'nullable|string|max:255',
+            'city' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'pin' => 'required|digits:6',
+            'landmark' => 'nullable|string|max:255',
+
+            'password' => 'nullable|min:6',
+        ], [
+            'email.unique' => 'This email already exists.',
+            'phone.unique' => 'This phone already exists.',
+            'alternate_phone.unique' => 'This alternate phone already exists.',
+            'alternate_phone.different' => 'Alternate phone must be different from phone.',
+        ]);
+
+        DB::transaction(function () use ($request, $tailor) {
+            $user = $tailor->user;
+
+            $user->update([
+                'name'            => $request->name,
+                'email'           => $request->email,
+                'phone'           => $request->phone,
+                'alternate_phone' => $request->alternate_phone,
+                'password'        => $request->filled('password')
+                    ? Hash::make($request->password)
+                    : $user->password,
+            ]);
+
+            $tailor->update([
+                'phone'           => $request->phone,
+                'alternate_phone' => $request->alternate_phone,
+                'address_line1'   => $request->address_line1,
+                'address_line2'   => $request->address_line2,
+                'city'            => $request->city,
+                'state'           => $request->state,
+                'pin'             => $request->pin,
+                'landmark'        => $request->landmark,
+            ]);
+        });
+
+        return redirect()
+            ->route('tailors.index')
+            ->with('success', 'Tailor updated successfully.');
+    }
 
     public function destroy(Tailor $tailor)
     {
@@ -166,49 +168,47 @@ public function update(Request $request, Tailor $tailor)
         return redirect()->route('tailors.index')->with('success', 'Tailor deleted successfully.');
     }
 
-
     public function exportExcel()
-{
-    return Excel::download(new TailorsExport(), 'tailors.xlsx');
-}
+    {
+        return Excel::download(new TailorsExport(), 'tailors.xlsx');
+    }
 
-public function exportCsv()
-{
-    return Excel::download(
-        new TailorsExport(),
-        'tailors.csv',
-        \Maatwebsite\Excel\Excel::CSV
-    );
-}
+    public function exportCsv()
+    {
+        return Excel::download(
+            new TailorsExport(),
+            'tailors.csv',
+            \Maatwebsite\Excel\Excel::CSV
+        );
+    }
 
-public function exportPdf()
-{
-    $tailors = Tailor::with('user')->latest()->get();
+    public function exportPdf()
+    {
+        $tailors = Tailor::with('user')->latest()->get();
 
-    $pdf = Pdf::loadView('pdf.tailors_pdf', compact('tailors'));
+        $pdf = Pdf::loadView('pdf.tailors_pdf', compact('tailors'));
 
-    return $pdf->download('tailors.pdf');
-}
+        return $pdf->download('tailors.pdf');
+    }
 
-public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls,csv'
-    ]);
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
 
-    Excel::import(new TailorsImport(), $request->file('file'));
+        Excel::import(new TailorsImport(), $request->file('file'));
 
-    return redirect()
-        ->route('tailors.index')
-        ->with('success', 'Tailors imported successfully.');
-}
+        return redirect()
+            ->route('tailors.index')
+            ->with('success', 'Tailors imported successfully.');
+    }
 
-public function downloadSample()
-{
-    return Excel::download(
-        new TailorsSampleExport(),
-        'tailors_import_sample.xlsx'
-    );
-}
-
+    public function downloadSample()
+    {
+        return Excel::download(
+            new TailorsSampleExport(),
+            'tailors_import_sample.xlsx'
+        );
+    }
 }

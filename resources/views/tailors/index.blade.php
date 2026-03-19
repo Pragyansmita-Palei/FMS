@@ -465,8 +465,8 @@
                             @endforelse
                         </tbody>
 
-                                                        <div class="modal fade" id="addTailorModal" tabindex="-1">
-<div class="modal-dialog custom-modal modal-dialog-centered modal-dialog-scrollable">
+   <div class="modal fade" id="addTailorModal" tabindex="-1">
+    <div class="modal-dialog custom-modal modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -478,87 +478,146 @@
                 @csrf
 
                 <div class="modal-body">
-
                     <div class="row g-3">
 
-                        <!-- Tailor ID -->
                         <div class="col-md-6">
                             <label class="form-label">Tailor ID</label>
                             <input type="text" class="form-control"
                                    value="{{ 'FMS-T-' . (($lastTailorId ?? 0) + 1) }}" readonly>
                         </div>
 
-                        <!-- Name -->
                         <div class="col-md-6">
                             <label class="form-label">Tailor Name <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control" required>
+                            <input type="text"
+                                   name="name"
+                                   value="{{ old('name') }}"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   required>
+                            @error('name')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Phone -->
                         <div class="col-md-6">
-                            <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                            <input type="text" name="phone" class="form-control" required>
+                            <label class="form-label">Phone <span class="text-danger">*</span></label>
+                            <input type="text"
+                                   name="phone"
+                                   value="{{ old('phone') }}"
+                                   class="form-control @error('phone') is-invalid @enderror"
+                                   required>
+                            @error('phone')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Alternate Phone -->
                         <div class="col-md-6">
                             <label class="form-label">Alternate Phone</label>
-                            <input type="text" name="alternate_phone" class="form-control">
+                            <input type="text"
+                                   name="alternate_phone"
+                                   value="{{ old('alternate_phone') }}"
+                                   class="form-control @error('alternate_phone') is-invalid @enderror">
+                            @error('alternate_phone')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Email -->
                         <div class="col-md-6">
-                            <label class="form-label">Email<span class="text-danger">*</span></label>
-                            <input type="email" name="email" class="form-control"required>
+                            <label class="form-label">Email <span class="text-danger">*</span></label>
+                            <input type="email"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   required>
+                            @error('email')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Password -->
                         <div class="col-md-6">
                             <label class="form-label">Password <span class="text-danger">*</span></label>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password"
+                                   name="password"
+                                   class="form-control @error('password') is-invalid @enderror"
+                                   required>
+                            @error('password')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Address Line 1 -->
                         <div class="col-md-6">
                             <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-                            <input type="text" name="address_line1" class="form-control" required>
+                            <input type="text"
+                                   name="address_line1"
+                                   value="{{ old('address_line1') }}"
+                                   class="form-control @error('address_line1') is-invalid @enderror"
+                                   required>
+                            @error('address_line1')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Address Line 2 -->
                         <div class="col-md-6">
                             <label class="form-label">Address Line 2</label>
-                            <input type="text" name="address_line2" class="form-control">
+                            <input type="text"
+                                   name="address_line2"
+                                   value="{{ old('address_line2') }}"
+                                   class="form-control @error('address_line2') is-invalid @enderror">
+                            @error('address_line2')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- PIN (manual) -->
                         <div class="col-md-6">
                             <label class="form-label">PIN Code <span class="text-danger">*</span></label>
-                            <input type="text" name="pin" class="form-control"
-                                   placeholder="Enter 6 digit PIN" required>
+                            <input type="text"
+                                   name="pin"
+                                   value="{{ old('pin') }}"
+                                   class="form-control @error('pin') is-invalid @enderror"
+                                   placeholder="Enter 6 digit PIN"
+                                   required>
+                            @error('pin')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- City (manual) -->
                         <div class="col-md-6">
                             <label class="form-label">City <span class="text-danger">*</span></label>
-                            <input type="text" name="city" class="form-control"
-                                   placeholder="City" required>
+                            <input type="text"
+                                   name="city"
+                                   value="{{ old('city') }}"
+                                   class="form-control @error('city') is-invalid @enderror"
+                                   placeholder="City"
+                                   required>
+                            @error('city')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- State (manual) -->
                         <div class="col-md-6">
                             <label class="form-label">State <span class="text-danger">*</span></label>
-                            <input type="text" name="state" class="form-control"
-                                   placeholder="State" required>
+                            <input type="text"
+                                   name="state"
+                                   value="{{ old('state') }}"
+                                   class="form-control @error('state') is-invalid @enderror"
+                                   placeholder="State"
+                                   required>
+                            @error('state')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <!-- Landmark -->
                         <div class="col-md-6">
                             <label class="form-label">Landmark</label>
-                            <input type="text" name="landmark" class="form-control">
+                            <input type="text"
+                                   name="landmark"
+                                   value="{{ old('landmark') }}"
+                                   class="form-control @error('landmark') is-invalid @enderror">
+                            @error('landmark')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
 
                     </div>
-
                 </div>
 
                 <div class="modal-footer">
@@ -569,7 +628,6 @@
                         Save Tailor
                     </button>
                 </div>
-
             </form>
 
         </div>
@@ -591,4 +649,15 @@
 
 </div>
 
+@if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modalEl = document.getElementById('addTailorModal');
+            if (modalEl) {
+                const addModal = new bootstrap.Modal(modalEl);
+                addModal.show();
+            }
+        });
+    </script>
+@endif
 @endsection

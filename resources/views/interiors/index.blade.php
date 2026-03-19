@@ -85,7 +85,7 @@
         {{ $interiors->firstItem() + $key }}
     </td>
 
-    <td class="fw-semibold">{{ $interior->firm_name }}</td>
+    <td class="fw-semibold">{{ $interior->name }}</td>
     <td>{{ $interior->email ?? '-' }}</td>
 
     <td>
@@ -118,16 +118,17 @@
 
         {{-- Delete --}}
         <form method="POST"
-              action="{{ route('interiors.destroy', $interior->id) }}"
-              class="d-inline delete-form">
-            @csrf
-            @method('DELETE')
+      action="{{ route('interiors.destroy', $interior->id) }}"
+      class="d-inline delete-form">
+    @csrf
+    @method('DELETE')
 
-            <button type="button"
-                    class="btn p-0 border-0 bg-transparent text-secondary btn-delete">
-                <i class="bi bi-trash"></i>
-            </button>
-        </form>
+    <button type="button"
+            class="btn p-0 border-0 bg-transparent text-secondary btn-delete"
+            data-message="This interior will be deleted!">
+        <i class="bi bi-trash"></i>
+    </button>
+</form>
 
     </td>
 </tr>
@@ -158,9 +159,9 @@
 <div class="col-md-6">
     <label class="form-label"> Name <span class="text-danger">*</span></label>
     <input type="text"
-           name="firm_name"
+           name="name"
            class="form-control"
-           value="{{ $interior->firm_name }}"
+           value="{{ $interior->name }}"
            required>
 </div>
 
@@ -216,7 +217,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">
-                    Interior Details – {{ $interior->firm_name }}
+                    Interior Details – {{ $interior->name }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -227,7 +228,7 @@
 
                     <div class="col-md-6">
                         <div class="fw-semibold text-muted">Name</div>
-                        <div>{{ $interior->firm_name }}</div>
+                        <div>{{ $interior->name }}</div>
                     </div>
 
                     <div class="col-md-6">
@@ -307,25 +308,47 @@
 
 <div class="col-md-6">
     <label class="form-label">Name <span class="text-danger">*</span></label>
-    <input type="text" name="firm_name" class="form-control" required>
+    <input type="text"
+           name="name"
+           value="{{ old('name') }}"
+           class="form-control @error('name') is-invalid @enderror"
+           required>
+    @error('name')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Phone</label>
     <div class="input-group">
         <span class="input-group-text">+91</span>
-        <input type="text" name="phone" class="form-control">
+        <input type="text"
+               name="phone"
+               value="{{ old('phone') }}"
+               class="form-control @error('phone') is-invalid @enderror">
     </div>
+    @error('phone')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Email</label>
-    <input type="email" name="email" class="form-control">
+    <input type="email"
+           name="email"
+           value="{{ old('email') }}"
+           class="form-control @error('email') is-invalid @enderror">
+    @error('email')
+        <div class="invalid-feedback d-block">{{ $message }}</div>
+    @enderror
 </div>
 
 <div class="col-md-6">
     <label class="form-label">Address</label>
-    <input type="text" name="address" class="form-control">
+    <input type="text"
+           name="address"
+           value="{{ old('address') }}"
+           class="form-control">
 </div>
 
 </div>
@@ -343,4 +366,12 @@
 </div>
 {{-- ===================== END ADD MODAL ===================== --}}
 
+@if ($errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let modal = new bootstrap.Modal(document.getElementById('addInteriorModal'));
+        modal.show();
+    });
+</script>
+@endif
 @endsection

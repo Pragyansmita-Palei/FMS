@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Interior extends Model
 {
     protected $fillable = [
-        'firm_name',
+        'user_id',
+        'name',
         'email',
         'phone',
         'address',
     ];
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

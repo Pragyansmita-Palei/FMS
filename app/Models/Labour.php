@@ -12,11 +12,17 @@ class Labour extends Model
     use HasFactory;
 
     protected $fillable = [
-        'labour_name',
-        'phone_number',
+        'user_id',
+        'name',
+        'phone',
         'email',
         'address',
        'rate_type',
        'price'
     ];
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

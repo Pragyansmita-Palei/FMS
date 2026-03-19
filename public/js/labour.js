@@ -4,17 +4,19 @@ document.querySelectorAll('.btn-delete').forEach(function (button) {
 
         const form = this.closest('.delete-form');
 
+        // ✅ get custom message (fallback if not provided)
+        const message = this.dataset.message || 'This item will be deleted!';
+
         Swal.fire({
             title: 'Are you sure?',
-            text: 'This labour will be deleted!',
+            text: message,
             icon: 'warning',
 
             showCancelButton: true,
             confirmButtonText: 'Yes, delete',
             cancelButtonText: 'Cancel',
 
-            // ✅ button colors
-            confirmButtonColor: '#2563eb',
+            confirmButtonColor: '#1d5d41',
             cancelButtonColor: '#6b7280'
 
         }).then((result) => {

@@ -46,7 +46,7 @@ class ProjectController extends Controller
             ->paginate($perPage)
             ->appends($request->query());   // keep filters while paginating
 
-        $interiors = \App\Models\Interior::orderBy('firm_name')->get(); // ✅ add
+        $interiors = \App\Models\Interior::orderBy('name')->get(); // ✅ add
 
 
         return view('projects.index', compact('projects', 'search', 'perPage', 'interiors'));
@@ -252,7 +252,7 @@ class ProjectController extends Controller
 
         $tailors = User::whereHas('tailor')->orderBy('name')->get();
         $sales = User::whereHas('SalesAssociate')->orderBy('name')->get();
-        $interiors = Interior::orderBy('firm_name')->get();
+        $interiors = Interior::orderBy('name')->get();
 
         // ==============================
 // PRODUCT → BRAND MAP
@@ -763,7 +763,7 @@ class ProjectController extends Controller
         $users = User::orderBy('name')->get();
         $salesAssociates = SalesAssociate::orderBy('name')->get();
         $tailors = Tailor::orderBy('name')->get();
-        $interiors = Interior::orderBy('firm_name')->get(); // ✅ ADD THIS
+        $interiors = Interior::orderBy('name')->get(); // ✅ ADD THIS
 
 
         return view('projects.show', compact('project', 'users', 'salesAssociates', 'tailors', 'interiors'));

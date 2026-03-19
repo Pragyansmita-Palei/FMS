@@ -254,59 +254,115 @@
                                         </div>
                                         <div class="modal-body">
                                             <form method="POST" action="{{ route('customers.update', $customer->id) }}">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Customer Code</label>
-                                                        <input type="text" class="form-control" value="{{ $customer->customer_code }}" readonly>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Customer Name <span class="text-danger">*</span></label>
-                                                        <input type="text" name="name" class="form-control" value="{{ old('name', $customer->name) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Phone <span class="text-danger">*</span></label>
-                                                        <input type="text" name="phone" class="form-control" value="{{ old('phone', $customer->phone) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Alternate Phone</label>
-                                                        <input type="text" name="alternate_phone" class="form-control" value="{{ old('alternate_phone', $customer->alternate_phone) }}">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Email <span class="text-danger">*</span></label>
-                                                        <input type="email" name="email" class="form-control" value="{{ old('email', $customer->email) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-                                                        <input type="text" name="address_line1" class="form-control" value="{{ old('address_line1', $customer->address_line1) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Address Line 2</label>
-                                                        <input type="text" name="address_line2" class="form-control" value="{{ old('address_line2', $customer->address_line2) }}">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">City <span class="text-danger">*</span></label>
-                                                        <input type="text" name="city" class="form-control" value="{{ old('city', $customer->city) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">State <span class="text-danger">*</span></label>
-                                                        <input type="text" name="state" class="form-control" value="{{ old('state', $customer->state) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">PIN Code <span class="text-danger">*</span></label>
-                                                        <input type="text" name="pin" class="form-control" value="{{ old('pin', $customer->pin) }}" required>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label">Landmark</label>
-                                                        <input type="text" name="landmark" class="form-control" value="{{ old('landmark', $customer->landmark) }}">
-                                                    </div>
-                                                </div>
-                                                <div class="text-end mt-4">
-                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-green">Update Customer</button>
-                                                </div>
-                                            </form>
+    @csrf
+    @method('PUT')
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label">Customer Code</label>
+            <input type="text" class="form-control" value="{{ $customer->customer_code }}" readonly>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+            <input type="text" name="name"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('name') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('name', $customer->name) : $customer->name }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Phone <span class="text-danger">*</span></label>
+            <input type="text" name="phone"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('phone') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('phone', $customer->phone) : $customer->phone }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Alternate Phone</label>
+            <input type="text" name="alternate_phone"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('alternate_phone') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('alternate_phone', $customer->alternate_phone) : $customer->alternate_phone }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('alternate_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('email') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('email', $customer->email) : $customer->email }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Address Line 1 <span class="text-danger">*</span></label>
+            <input type="text" name="address_line1"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('address_line1') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('address_line1', $customer->address_line1) : $customer->address_line1 }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('address_line1') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Address Line 2</label>
+            <input type="text" name="address_line2"
+                   class="form-control"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('address_line2', $customer->address_line2) : $customer->address_line2 }}">
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">City <span class="text-danger">*</span></label>
+            <input type="text" name="city"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('city') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('city', $customer->city) : $customer->city }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('city') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">State <span class="text-danger">*</span></label>
+            <input type="text" name="state"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('state') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('state', $customer->state) : $customer->state }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('state') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">PIN Code <span class="text-danger">*</span></label>
+            <input type="text" name="pin"
+                   class="form-control @if(session('edit_customer_id') == $customer->id) @error('pin') is-invalid @enderror @endif"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('pin', $customer->pin) : $customer->pin }}">
+            @if(session('edit_customer_id') == $customer->id)
+                @error('pin') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            @endif
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Landmark</label>
+            <input type="text" name="landmark"
+                   class="form-control"
+                   value="{{ session('edit_customer_id') == $customer->id ? old('landmark', $customer->landmark) : $customer->landmark }}">
+        </div>
+    </div>
+
+    <div class="text-end mt-4">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-green">Update Customer</button>
+    </div>
+</form>
                                         </div>
                                     </div>
                                 </div>
@@ -410,8 +466,16 @@
     </div>
 </div>
 
+@if($errors->any())
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var modal = new bootstrap.Modal(document.getElementById('addCustomerModal'));
+    modal.show();
+});
+</script>
+@endif
 @endsection
-
+{{--
 @push('scripts')
 @if($errors->any())
 <script>
@@ -421,4 +485,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 @endif
-@endpush
+@endpush --}}
